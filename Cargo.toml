@@ -10,6 +10,7 @@ repository = "https://github.com/orvij/readpassphrase-sys"
 authors = ["orvi"]
 
 [dependencies]
+libc = "0.2.98"
 
 [build-dependencies]
 bindgen = "0.58.1"
