@@ -2,7 +2,28 @@
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
 
-include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
+use std::os::raw::{c_char, c_int};
+
+/// Turn off echo (default).
+pub const RPP_ECHO_OFF: c_int = 0x00;
+
+/// Leave echo on.
+pub const RPP_ECHO_ON: c_int = 0x01;
+
+/// Fail if there is no tty.
+pub const RPP_REQUIRE_TTY: c_int = 0x02;
+
+/// Force input to lower case.
+pub const RPP_FORCELOWER: c_int = 0x04;
+
+/// Force input to upper case.
+pub const RPP_FORCEUPPER: c_int = 0x08;
+
+/// Strip the high bit from input.
+pub const RPP_SEVENBIT: c_int = 0x10;
+
+/// Read from stdin, no /dev/tty
+pub const RPP_STDIN: c_int = 0x20;
 
 /// Supply a prompt to and read password from `/dev/tty`
 ///
@@ -40,9 +61,6 @@ include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 /// NUL-terminated passphrase.  If an error is encountered, the terminal
 /// state is restored and a null pointer is returned.
 /// ```
-#[cfg(not(target_os = "openbsd"))]
-pub extern "C" fn readpassphrase(_prompt: *const libc::c_char, _buf: *mut libc::c_char, _bufsiz: u64, _flags: i32);
-
-#[cfg(test)]
-mod tests {
+extern "C" {
+    pub fn readpassphrase(_prompt: *const c_char, _buf: *mut c_char, _bufsiz: usize, _flags: c_int) -> *mut c_char;
 }
